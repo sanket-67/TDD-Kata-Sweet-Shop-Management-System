@@ -3,6 +3,16 @@ import ApiError from "../utils/ApiError.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+};
+
+const sanitizeUser = (user) => {
+    const userObj = user.toObject();
+    delete userObj.password;
+    return userObj;
+};
+
 export const registerUser = async (data) => {
     const { name, email, password } = data;
 
@@ -23,18 +33,9 @@ export const registerUser = async (data) => {
         password: passHash
     });
 
-    const cleanUser = newUser.toObject();
-    delete cleanUser.password;
-
-    const token = jwt.sign(
-        { id: newUser._id },
-        process.env.JWT_SECRET,
-        { expiresIn: "7d" }
-    );
-
     return {
-        user: cleanUser,
-        token
+        user: sanitizeUser(newUser),
+        token: generateToken(newUser._id)
     };
 };
 
@@ -55,14 +56,8 @@ export const loginUser = async (data) => {
         throw new ApiError(401, "Invalid credentials");
     }
 
-    const token = jwt.sign(
-        { id: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: "7d" }
-    );
-
-    const userObj = user.toObject();
-    delete userObj.password;
-
-    return { user: userObj, token };
+    return {
+        user: sanitizeUser(user),
+        token: generateToken(user._id)
+    };
 };
