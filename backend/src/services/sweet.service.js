@@ -17,6 +17,29 @@ export const getAllSweets = async () => {
     return await Sweet.find({});
 };
 
+export const searchSweetsService = async (query) => {
+    const { name, category, minPrice, maxPrice } = query;
+    let filter = {};
+
+    if (name) {
+        filter.name = { $regex: name, $options: "i" };
+    }
+
+    if (category) {
+        filter.category = { $regex: category, $options: "i" };
+    }
+
+    if (minPrice || maxPrice) {
+        filter.price = {};
+        if (minPrice) filter.price.$gte = Number(minPrice);
+        if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    return await Sweet.find(filter);
+};
+
+
+
 export const purchaseSweetService = async (sweetId) => {
     const sweet = await Sweet.findById(sweetId);
 
