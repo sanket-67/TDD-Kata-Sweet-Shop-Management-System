@@ -1,6 +1,6 @@
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { createSweet as createSweetService, getAllSweets as getAllSweetsService, purchaseSweetService, searchSweetsService, updateSweetService } from "../services/sweet.service.js";
+import { createSweet as createSweetService, getAllSweets as getAllSweetsService, purchaseSweetService, searchSweetsService, updateSweetService, deleteSweetService, restockSweetService } from "../services/sweet.service.js";
 
 export const addSweet = asyncHandler(async (req, res) => {
     const sweet = await createSweetService(req.body);
@@ -43,5 +43,24 @@ export const purchaseSweet = asyncHandler(async (req, res) => {
 
     res.status(200).json(
         new ApiResponse(200, "Sweet purchased successfully", sweet)
+    );
+});
+
+export const deleteSweet = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    await deleteSweetService(id);
+
+    res.status(200).json(
+        new ApiResponse(200, "Sweet deleted successfully", null)
+    );
+});
+
+export const restockSweet = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { quantity } = req.body;
+    const sweet = await restockSweetService(id, quantity);
+
+    res.status(200).json(
+        new ApiResponse(200, "Sweet restocked successfully", sweet)
     );
 });

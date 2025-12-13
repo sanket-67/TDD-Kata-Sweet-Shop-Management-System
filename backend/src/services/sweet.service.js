@@ -69,3 +69,30 @@ export const purchaseSweetService = async (sweetId) => {
 
     return sweet;
 };
+
+export const deleteSweetService = async (id) => {
+    const sweet = await Sweet.findByIdAndDelete(id);
+
+    if (!sweet) {
+        throw new ApiError(404, "Sweet not found");
+    }
+
+    return sweet;
+};
+
+export const restockSweetService = async (id, quantity) => {
+    if (!quantity || quantity <= 0) {
+        throw new ApiError(400, "Invalid quantity");
+    }
+
+    const sweet = await Sweet.findById(id);
+
+    if (!sweet) {
+        throw new ApiError(404, "Sweet not found");
+    }
+
+    sweet.quantity += quantity;
+    await sweet.save();
+
+    return sweet;
+};
