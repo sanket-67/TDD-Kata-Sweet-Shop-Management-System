@@ -36,3 +36,17 @@ describe("Sweets: Add Sweet", () => {
         expect(res.body.data).toHaveProperty("name", "Chocolate Fudge");
     });
 });
+
+describe("Sweets: Get All Sweets", () => {
+    it("should return 200 and list of sweets for authenticated user", async () => {
+        const token = jwt.sign({ id: "user123", role: "user" }, process.env.JWT_SECRET);
+
+        const res = await request(app)
+            .get("/api/sweets")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty("message", "Sweets fetched successfully");
+        expect(Array.isArray(res.body.data)).toBe(true);
+    });
+});
