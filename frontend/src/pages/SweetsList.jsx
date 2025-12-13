@@ -6,6 +6,13 @@ function SweetsList() {
     const [sweets, setSweets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Search State
+    const [searchName, setSearchName] = useState('');
+    const [searchCategory, setSearchCategory] = useState('');
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,23 +23,51 @@ function SweetsList() {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get('http://localhost:5000/api/sweets', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setSweets(response.data.data);
+            setLoading(false);
+        } catch (err) {
+            handleError(err);
+        }
+    };
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('token');
+            const params = new URLSearchParams();
+            if (searchName) params.append('name', searchName);
+            if (searchCategory) params.append('category', searchCategory);
+            if (minPrice) params.append('minPrice', minPrice);
+            if (maxPrice) params.append('maxPrice', maxPrice);
+
+            const response = await axios.get(`http://localhost:5000/api/sweets/search?${params.toString()}`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
 
             setSweets(response.data.data);
             setLoading(false);
-
         } catch (err) {
-            console.error("Error fetching sweets:", err);
-            setError('Failed to load sweets. Please try again.');
+            handleError(err);
+        }
+    };
 
-            setLoading(false);
+    const handleReset = () => {
+        setSearchName('');
+        setSearchCategory('');
+        setMinPrice('');
+        setMaxPrice('');
+        fetchSweets();
+    };
 
-            if (err.response && err.response.status === 401) {
-                navigate('/login');
-            }
+    const handleError = (err) => {
+        console.error("Error:", err);
+        setError('Failed to load sweets. Please try again.');
+        setLoading(false);
+        if (err.response && err.response.status === 401) {
+            navigate('/login');
         }
     };
 
@@ -45,7 +80,7 @@ function SweetsList() {
                 }
             });
 
-         
+            // Update local state to show decreased quantity immediately
             setSweets(sweets.map(sweet =>
                 sweet._id === id ? { ...sweet, quantity: response.data.data.quantity } : sweet
             ));
@@ -62,6 +97,39 @@ function SweetsList() {
     return (
         <div className="sweets-container">
             <h2>Sweets Menu</h2>
+
+            {/* Search Bar */}
+            <form onSubmit={handleSearch} className="search-bar">
+                <input
+                    type="text"
+                    placeholder="Search by name..."
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Category..."
+                    value={searchCategory}
+                    onChange={(e) => setSearchCategory(e.target.value)}
+                />
+                <input
+                    type="number"
+                    placeholder="Min Price"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="price-input"
+                />
+                <input
+                    type="number"
+                    placeholder="Max Price"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="price-input"
+                />
+                <button type="submit">Search</button>
+                <button type="button" onClick={handleReset} className="reset-btn">Reset</button>
+            </form>
+
             {sweets.length === 0 ? (
                 <p>No sweets available at the moment.</p>
             ) : (
