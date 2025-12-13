@@ -1,11 +1,19 @@
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { createSweet as createSweetService } from "../services/sweet.service.js";
+import { createSweet as createSweetService, getAllSweets as getAllSweetsService } from "../services/sweet.service.js";
 
 export const addSweet = asyncHandler(async (req, res) => {
     const sweet = await createSweetService(req.body);
 
     res.status(201).json(
         new ApiResponse(201, "Sweet added successfully", sweet)
+    );
+});
+
+export const getSweets = asyncHandler(async (req, res) => {
+    const sweets = await getAllSweetsService();
+
+    res.status(200).json(
+        new ApiResponse(200, "Sweets fetched successfully", sweets)
     );
 });
