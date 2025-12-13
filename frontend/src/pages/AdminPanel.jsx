@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../api/config';
 
 function AdminPanel() {
     const [sweets, setSweets] = useState([]);
@@ -34,7 +35,7 @@ function AdminPanel() {
     const fetchSweets = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/sweets', {
+            const response = await axios.get(`${API_URL}/api/sweets`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setSweets(response.data.data);
@@ -57,7 +58,7 @@ function AdminPanel() {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/sweets', formData, {
+            await axios.post(`${API_URL}/api/sweets`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -74,7 +75,7 @@ function AdminPanel() {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/sweets/${editingSweet._id}`, formData, {
+            await axios.put(`${API_URL}/api/sweets/${editingSweet._id}`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -92,7 +93,7 @@ function AdminPanel() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/sweets/${id}`, {
+            await axios.delete(`${API_URL}/api/sweets/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -107,7 +108,7 @@ function AdminPanel() {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:5000/api/sweets/${restockingSweet._id}/restock`, 
+            await axios.post(`${API_URL}/api/sweets/${restockingSweet._id}/restock`, 
                 { quantity: parseInt(restockQuantity) },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

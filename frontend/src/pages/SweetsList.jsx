@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../api/config';
 
 function SweetsList() {
     const [sweets, setSweets] = useState([]);
@@ -27,7 +28,7 @@ function SweetsList() {
     const fetchSweets = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/sweets', {
+            const response = await axios.get(`${API_URL}/api/sweets`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setSweets(response.data.data);
@@ -48,7 +49,7 @@ function SweetsList() {
             if (minPrice) params.append('minPrice', minPrice);
             if (maxPrice) params.append('maxPrice', maxPrice);
 
-            const response = await axios.get(`http://localhost:5000/api/sweets/search?${params.toString()}`, {
+            const response = await axios.get(`${API_URL}/api/sweets/search?${params.toString()}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -79,7 +80,7 @@ function SweetsList() {
     const handlePurchase = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`http://localhost:5000/api/sweets/${id}/purchase`, {}, {
+            const response = await axios.post(`${API_URL}/api/sweets/${id}/purchase`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

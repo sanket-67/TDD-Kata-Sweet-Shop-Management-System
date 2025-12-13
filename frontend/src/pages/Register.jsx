@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import API_URL from '../api/config';
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ function Register() {
         setSuccess('');
 
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+            const response = await axios.post(`${API_URL}/api/auth/register`, formData);
 
             setSuccess('Registration successful! Redirecting to login...');
 
