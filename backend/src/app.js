@@ -5,6 +5,7 @@ import errorMiddleware from "./middlewares/errorMiddleware.js";
 import authRoute from './routes/authRoutes.js'
 import verifyToken from "./middlewares/verifyToken.js";
 import checkAdmin from "./middlewares/checkAdmin.js";
+import sweetRoutes from "./routes/sweetRoutes.js";
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.get("/api/protected/admin", verifyToken, checkAdmin, (req, res) => {
 });
 
 app.use("/api/auth", authRoute);
+
+app.use("/api/sweets", sweetRoutes);
 app.get("/", (req, res) => {
     res.status(200).json({
         message: "Api Is Running ",
