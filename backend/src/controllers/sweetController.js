@@ -1,6 +1,6 @@
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { createSweet as createSweetService, getAllSweets as getAllSweetsService, purchaseSweetService, searchSweetsService } from "../services/sweet.service.js";
+import { createSweet as createSweetService, getAllSweets as getAllSweetsService, purchaseSweetService, searchSweetsService, updateSweetService } from "../services/sweet.service.js";
 
 export const addSweet = asyncHandler(async (req, res) => {
     const sweet = await createSweetService(req.body);
@@ -27,6 +27,15 @@ export const searchSweets = asyncHandler(async (req, res) => {
 });
 
 
+
+export const updateSweet = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const updatedSweet = await updateSweetService(id, req.body);
+
+    res.status(200).json(
+        new ApiResponse(200, "Sweet updated successfully", updatedSweet)
+    );
+});
 
 export const purchaseSweet = asyncHandler(async (req, res) => {
     const { id } = req.params;

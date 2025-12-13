@@ -3,8 +3,8 @@ import ApiError from "../utils/ApiError.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const generateToken = (id, role) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 const sanitizeUser = (user) => {
@@ -14,7 +14,7 @@ const sanitizeUser = (user) => {
 };
 
 export const registerUser = async (data) => {
-    const { name, email, password } = data;
+    const { name, email, password, role } = data;
 
     if (!name || !email || !password) {
         throw new ApiError(400, "All fields are required");
@@ -30,12 +30,13 @@ export const registerUser = async (data) => {
     const newUser = await User.create({
         name,
         email,
-        password: passHash
+        password: passHash,
+        role: role || "customer"
     });
 
     return {
         user: sanitizeUser(newUser),
-        token: generateToken(newUser._id)
+        token: generateToken(newUser._id, newUser.role)
     };
 };
 
@@ -58,6 +59,6 @@ export const loginUser = async (data) => {
 
     return {
         user: sanitizeUser(user),
-        token: generateToken(user._id)
+        token: generateToken(user._id, user.role)
     };
 };

@@ -40,6 +40,19 @@ export const searchSweetsService = async (query) => {
 
 
 
+export const updateSweetService = async (id, updateData) => {
+    const sweet = await Sweet.findByIdAndUpdate(id, updateData, {
+        new: true,
+        runValidators: true,
+    });
+
+    if (!sweet) {
+        throw new ApiError(404, "Sweet not found");
+    }
+
+    return sweet;
+};
+
 export const purchaseSweetService = async (sweetId) => {
     const sweet = await Sweet.findById(sweetId);
 

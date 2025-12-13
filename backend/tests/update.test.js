@@ -49,6 +49,9 @@ describe("PUT /api/sweets/:id", () => {
                 quantity: 20,
             });
 
+        if (response.status !== 200) {
+            console.log("Update Failed:", response.status, response.body);
+        }
         expect(response.status).toBe(200);
 
         expect(response.body).toHaveProperty("success", true);
