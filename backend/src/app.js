@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-
+app.use(express.urlencoded({ extended: true }));
 // Temporary route for middleware testing
 app.get("/api/protected/test", verifyToken, (req, res) => {
     res.status(200).json({ message: "Protected route accessed" });
