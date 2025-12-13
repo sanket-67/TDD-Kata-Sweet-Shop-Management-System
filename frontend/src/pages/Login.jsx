@@ -18,8 +18,9 @@ function Login() {
         password
       });
 
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      const { data } = response.data;
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       navigate('/sweets');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

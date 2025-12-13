@@ -14,6 +14,22 @@ export const createSweet = async (data) => {
 };
 
 export const getAllSweets = async () => {
-    const sweets = await Sweet.find();
-    return sweets;
+    return await Sweet.find({});
+};
+
+export const purchaseSweetService = async (sweetId) => {
+    const sweet = await Sweet.findById(sweetId);
+
+    if (!sweet) {
+        throw new ApiError(404, "Sweet not found");
+    }
+
+    if (sweet.quantity <= 0) {
+        throw new ApiError(400, "Sweet is out of stock");
+    }
+
+    sweet.quantity -= 1;
+    await sweet.save();
+
+    return sweet;
 };
