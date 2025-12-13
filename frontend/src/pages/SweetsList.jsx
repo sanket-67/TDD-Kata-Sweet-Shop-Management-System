@@ -6,6 +6,7 @@ function SweetsList() {
     const [sweets, setSweets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     // Search State
     const [searchName, setSearchName] = useState('');
@@ -16,6 +17,10 @@ function SweetsList() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.role === 'admin') {
+            setIsAdmin(true);
+        }
         fetchSweets();
     }, []);
 
@@ -96,7 +101,22 @@ function SweetsList() {
 
     return (
         <div className="sweets-container">
-            <h2>Sweets Menu</h2>
+            <div className="page-header">
+                <h2>Sweets Menu</h2>
+                <div className="header-actions">
+                    {isAdmin && (
+                        <button onClick={() => navigate('/admin')} className="admin-btn">
+                            Admin Panel
+                        </button>
+                    )}
+                    <button onClick={() => {
+                        localStorage.clear();
+                        navigate('/login');
+                    }} className="logout-btn">
+                        Logout
+                    </button>
+                </div>
+            </div>
 
             {/* Search Bar */}
             <form onSubmit={handleSearch} className="search-bar">
