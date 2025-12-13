@@ -35,3 +35,25 @@ describe("Middleware: verifyToken", () => {
         expect(res.body).toHaveProperty("message", "Protected route accessed");
     });
 });
+
+describe("Middleware: checkAdmin", () => {
+    it("should return 403 if user is not admin", async () => {
+        const token = jwt.sign({ id: "123", role: "user" }, process.env.JWT_SECRET);
+        const res = await request(app)
+            .get("/api/protected/admin")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(res.status).toBe(403);
+        expect(res.body).toHaveProperty("message", "Access denied. Admin only.");
+    });
+
+    it("should allow request if user is admin", async () => {
+        const token = jwt.sign({ id: "123", role: "admin" }, process.env.JWT_SECRET);
+        const res = await request(app)
+            .get("/api/protected/admin")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty("message", "Admin route accessed");
+    });
+});

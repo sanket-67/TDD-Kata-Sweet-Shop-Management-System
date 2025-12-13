@@ -4,6 +4,7 @@ import morgan from "morgan";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 import authRoute from './routes/authRoutes.js'
 import verifyToken from "./middlewares/verifyToken.js";
+import checkAdmin from "./middlewares/checkAdmin.js";
 
 const app = express();
 
@@ -14,6 +15,10 @@ app.use(morgan("dev"));
 // Temporary route for middleware testing
 app.get("/api/protected/test", verifyToken, (req, res) => {
     res.status(200).json({ message: "Protected route accessed" });
+});
+
+app.get("/api/protected/admin", verifyToken, checkAdmin, (req, res) => {
+    res.status(200).json({ message: "Admin route accessed" });
 });
 
 app.use("/api/auth", authRoute);
