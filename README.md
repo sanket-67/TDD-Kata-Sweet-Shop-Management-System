@@ -60,6 +60,14 @@ The system consists of:
    ```
    The application should now be accessible at `http://localhost:5173` (or the port shown in your terminal).
 
+## API Documentation
+
+You can explore and test the API endpoints using our **Postman Collection**:
+
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://web.postman.co/workspace/My-Workspace~2e6cbe6d-83e2-4450-8974-3b4a4534bc1e/collection/39028091-ccfa616f-9fe5-44cd-870a-e3e43b17a158?action=share&source=copy-link&creator=39028091)
+
+**[Checkout Postman APIs Test Workspace](https://web.postman.co/workspace/My-Workspace~2e6cbe6d-83e2-4450-8974-3b4a4534bc1e/collection/39028091-ccfa616f-9fe5-44cd-870a-e3e43b17a158?action=share&source=copy-link&creator=39028091)**
+
 ## My AI Usage
 
 Transparency in using AI tools is a core part of this project's workflow. Below is a detailed account of how AI was leveraged:
